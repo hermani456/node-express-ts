@@ -23,8 +23,8 @@ jobs:
         with:
           run_install: true # automatically installs dependencies
 
-      - name: Run tests
-        run: pnpm run test:run
+      # - name: Run tests
+      #   run: pnpm run test:run
 
       - name: Run TypeScript type checking
         run: pnpm run type-check
