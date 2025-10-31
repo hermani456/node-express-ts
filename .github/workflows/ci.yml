@@ -21,8 +21,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10
-          run_install: true
+          run_install: true # automatically installs dependencies
 
       - name: Run tests
         run: pnpm run test:run
