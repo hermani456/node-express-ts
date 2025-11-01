@@ -2,7 +2,6 @@
 
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
-import perfectionist from "eslint-plugin-perfectionist";
 import { defineConfig } from "eslint/config";
 import vitest from "@vitest/eslint-plugin";
 
@@ -21,7 +20,6 @@ export default defineConfig([
       },
     },
   },
-  /** @type {any} */ (perfectionist.configs["recommended-natural"]),
   {
     files: ["**/*.test.ts", "**/*.spec.ts"],
     plugins: {
