@@ -60,9 +60,28 @@ export const verification = pgTable("verification", {
     .notNull(),
 });
 
+// Additional tables
+
+export const spotRequest = pgTable("spot_request", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  cordinates: text("coordinates").notNull(),
+  radius: text("radius").notNull(),
+  details: text("details").notNull(),
+  status: text("status").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
 export const schema = {
   user,
   session,
   account,
   verification,
+  spotRequest,
 };
