@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:latest
+    image: postgres:17
     container_name: parking_app_postgres
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
