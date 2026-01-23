@@ -7,7 +7,7 @@ import vitest from "@vitest/eslint-plugin";
 
 export default defineConfig([
   {
-    ignores: ["**/*.js"],
+    ignores: ["**/*.js", "postgres_data", "dist", "drizzle"],
   },
   eslint.configs.recommended,
   tseslint.configs.strictTypeChecked,

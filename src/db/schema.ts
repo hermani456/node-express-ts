@@ -1,4 +1,19 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  boolean,
+  pgEnum,
+  real,
+} from "drizzle-orm/pg-core";
+
+export const roleEnum = pgEnum("role", ["admin", "owner", "client", "host"]);
+export const bookingStatusEnum = pgEnum("booking_status", [
+  "pending",
+  "active",
+  "completed",
+  "cancelled",
+]);
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -6,6 +21,7 @@ export const user = pgTable("user", {
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
+  role: roleEnum("role").default("client").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -60,7 +76,42 @@ export const verification = pgTable("verification", {
     .notNull(),
 });
 
-// Additional tables
+export const parkingSpot = pgTable("parking_spot", {
+  id: text("id").primaryKey(),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  latitude: real("latitude").notNull(),
+  longitude: real("longitude").notNull(),
+  address: text("address").notNull(),
+  pricePerHour: real("price_per_hour").notNull(),
+  isAvailable: boolean("is_available").default(true).notNull(),
+  description: text("description"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+export const booking = pgTable("booking", {
+  id: text("id").primaryKey(),
+  spotId: text("spot_id")
+    .notNull()
+    .references(() => parkingSpot.id, { onDelete: "cascade" }),
+  clientId: text("client_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  startTime: timestamp("start_time").notNull(),
+  endTime: timestamp("end_time").notNull(),
+  status: bookingStatusEnum("status").default("pending").notNull(),
+  totalPrice: real("total_price").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
 
 export const spotRequest = pgTable("spot_request", {
   id: text("id").primaryKey(),
@@ -83,5 +134,7 @@ export const schema = {
   session,
   account,
   verification,
+  parkingSpot,
+  booking,
   spotRequest,
 };
